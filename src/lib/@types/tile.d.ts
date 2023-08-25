@@ -2,7 +2,7 @@
 import { Vec2 } from "./global";
 import type TileComponent from "$components/Tile.svelte";
 
-export type TileType = "none" | "wheat" | "base";
+export type TileType = "none" | "empty" | "wheat" | "base";
 
 export type Tile = {
     id: number;
@@ -14,4 +14,4 @@ export type Tile = {
     component: typeof TileComponent;
 }
 
-export type TileMap = Tile[][];
+export type TileMap = Tile[][] | null[][];

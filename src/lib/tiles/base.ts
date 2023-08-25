@@ -1,6 +1,6 @@
 import type { Tile, Vec2, TileType} from "$types";
 import TileComponent from "$components/Tile.svelte";
-export class Base <T extends Tile> implements Tile {
+export class Base implements Tile {
 
     id: number;
     position: Vec2;

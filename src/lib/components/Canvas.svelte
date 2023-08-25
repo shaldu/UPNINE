@@ -91,7 +91,6 @@
         innerCanvas.style.left = `${canvas.offsetWidth / 2 - innerCanvas.offsetWidth / 2}px`;
         innerCanvas.style.top = `${canvas.offsetHeight / 2 - innerCanvas.offsetHeight / 2}px`;
     }
-
     
     const keyMovementDown = (e: KeyboardEvent) => {
         switch (e.key) {
