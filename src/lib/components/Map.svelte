@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import type { TileMap, TileType, Vec2 } from "$types";
-    import { Empty, Wheat } from "$lib/tiles";
+    import { Empty, Wheat, None } from "$lib/tiles";
 
     const MAP_SIZE = 32;
 
@@ -12,7 +12,6 @@
         initMapWithNull();
         addTile([0, 0], "wheat");
         console.log(map);
-        
     });
 
     function initMapWithNull() {
@@ -33,7 +32,7 @@
 
     function addTile(position: Vec2, tileType: TileType) {
         position = convertToMapPosition(position);
-        
+
         let tile = new Empty(1, position);
 
         switch (tileType) {
@@ -74,7 +73,10 @@
         const unexistantNeighbours: Vec2[] = [];
         for (const x in map) {
             for (const y in map[x]) {
-                const neighbours = getUnexistantNeighbours([Number(x), Number(y)]);
+                const neighbours = getUnexistantNeighbours([
+                    Number(x),
+                    Number(y),
+                ]);
                 for (const neighbour of neighbours) {
                     unexistantNeighbours.push(neighbour);
                 }
@@ -83,31 +85,53 @@
         return unexistantNeighbours;
     }
 
-    function addEmptyTiles(position: Vec2[]){
+    function addEmptyTiles(position: Vec2[]) {
         console.log(position);
-        for (const pos of position){
+        for (const pos of position) {
             addTile(pos, "empty");
+        }
+    }
+
+    function removeEmptyTiles() {
+        //loop trough map and remove all empty tiles
+        for (const x in map) {
+            for (const y in map[x]) {
+                if (map[x][y]?.type == "empty") {
+                    map[x][y] = null;                    
+                }
+            }
         }
     }
 
     function switchTileBuyMode() {
         tileBuyMode = !tileBuyMode;
-        if (tileBuyMode){
+        if (tileBuyMode) {
             addEmptyTiles(getAllUnexistantNeighbours());
+        } else {
+            removeEmptyTiles();
         }
     }
-
 </script>
 
 <div>
     <button on:click={() => switchTileBuyMode()}>Buy Tiles</button>
-    {#each map as x}
-        {#if x}
-            {#each x as y}
-                {#if y}
-                    <svelte:component this={y.component} name={y.name} color={y.color}/>
-                {/if}
-            {/each}
-        {/if}
-    {/each}
+    <div class="maplayout">
+        {#each map as x}
+            {#if x}
+                {#each x as y}
+                    {#if y}
+                        <svelte:component
+                            this={y.component}
+                            name={y.name}
+                            color={y.color}
+                        />
+                    {:else}
+                        <div class="none">
+
+                        </div>
+                    {/if}
+                {/each}
+            {/if}
+        {/each}
+    </div>
 </div>

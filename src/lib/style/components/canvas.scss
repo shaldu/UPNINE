@@ -15,4 +15,12 @@
     position: absolute;
     height: 100%;
     width: 100%;
+
+    .maplayout{
+        display: grid;
+        grid-template-columns: repeat(32, 300px);
+        grid-template-rows: repeat(32, 300px);
+        height: 100%;
+        width: 100%;
+    }
 }
