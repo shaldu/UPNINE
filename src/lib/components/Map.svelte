@@ -11,6 +11,7 @@
     onMount(() => {
         initMapWithNull();
         addTile([16, 16], "wheat");
+        addTile([2, 2], "wheat");
         console.log(map);
     });
 
@@ -23,15 +24,7 @@
         }
     }
 
-    function convertToMapPosition(pos: Vec2): Vec2 {
-        //convert to map position where 0,0 is the center of the map and the middle of the array
-        const mapX = Math.floor(pos[0] / 32) + MAP_SIZE / 2;
-        const mapY = Math.floor(pos[1] / 32) + MAP_SIZE / 2;
-        return [mapX, mapY];
-    }
-
     function addTile(position: Vec2, tileType: TileType) {
-        
         let tile = new Empty(1, position);
 
         switch (tileType) {
@@ -105,7 +98,7 @@
         }
     }
 
-    function switchTileBuyMode() {
+    export function switchTileBuyMode() {
         tileBuyMode = !tileBuyMode;
         if (tileBuyMode) {
             addEmptyTiles(getAllUnexistantNeighbours());
@@ -115,8 +108,7 @@
     }
 </script>
 
-<div>
-    <button on:click={() => switchTileBuyMode()}>Buy Tiles</button>
+<div class="position-absolute">
     <div class="maplayout">
         {#each map as x}
             {#if x}

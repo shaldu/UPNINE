@@ -12,16 +12,27 @@
         keyS = false,
         keyD = false;
     let movementIntervalVar;
+    let mapComponent: Map;
+
+    let mousePosition = [0, 0];
 
     onMount(() => {
+        window.addEventListener("contextmenu", e => e.preventDefault());
+
+        canvas.addEventListener("mousemove", (e) => {
+            mousePosition = [e.clientX, e.clientY];
+        });
+
         canvas.addEventListener("mousedown", (e) => {
-            if (e.button === 1) {
+            if (e.button === 2) {
+                e.preventDefault();
                 middleMousePressed = true;
             }
         });
 
         canvas.addEventListener("mouseup", (e) => {
-            if (e.button === 1) {
+            if (e.button === 2) {
+                e.preventDefault();
                 middleMousePressed = false;
             }
         });
@@ -32,7 +43,6 @@
                 moveCanvas(e.movementX, e.movementY);
             }
         });
-
 
         function movementInterval() {
             movementIntervalVar = setInterval(() => {
@@ -86,12 +96,16 @@
         }
     };
 
-    function centerCanvas(){
+    function centerCanvas() {
         //move canvas to center
-        innerCanvas.style.left = `${canvas.offsetWidth / 2 - innerCanvas.offsetWidth / 2}px`;
-        innerCanvas.style.top = `${canvas.offsetHeight / 2 - innerCanvas.offsetHeight / 2}px`;
+        innerCanvas.style.left = `${
+            canvas.offsetWidth / 2 - innerCanvas.offsetWidth / 2
+        }px`;
+        innerCanvas.style.top = `${
+            canvas.offsetHeight / 2 - innerCanvas.offsetHeight / 2
+        }px`;
     }
-    
+
     const keyMovementDown = (e: KeyboardEvent) => {
         switch (e.key) {
             case "w":
@@ -132,12 +146,27 @@
     }
 
     function zoomCanvas(value: number) {
+        // const maxZoom = 4;
+        // const minZoom = 0.2;
+        // const zoomSpeed = 0.1;
         innerCanvas.style.transform = `scale(${value})`;
-    }
 
+    }
 </script>
 
 <!-- svelte-ignore a11y-autofocus -->
+<div id="ui">
+    <div id="ui-top-bar" />
+    <div id="ui-side-bar">
+        <div class="inner">
+            <button
+                class="buy-btn"
+                on:click={() => mapComponent.switchTileBuyMode()}
+                >Buy Tiles</button
+            >
+        </div>
+    </div>
+</div>
 <div
     id="canvas"
     tabindex="-1"
@@ -149,6 +178,6 @@
     bind:this={canvas}
 >
     <div id="inner-canvas" bind:this={innerCanvas}>
-        <Map />
+        <Map bind:this={mapComponent} />
     </div>
 </div>
