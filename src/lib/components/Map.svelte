@@ -10,7 +10,7 @@
 
     onMount(() => {
         initMapWithNull();
-        addTile([0, 0], "wheat");
+        addTile([16, 16], "wheat");
         console.log(map);
     });
 
@@ -31,8 +31,7 @@
     }
 
     function addTile(position: Vec2, tileType: TileType) {
-        position = convertToMapPosition(position);
-
+        
         let tile = new Empty(1, position);
 
         switch (tileType) {
@@ -61,7 +60,8 @@
 
         //check if neighbour exists in map
         for (const neighbour of neighbours) {
-            if (!map[neighbour[0]] || !map[neighbour[0]][neighbour[1]]) {
+            if (map[neighbour[0]] === undefined) continue;
+            if (map[neighbour[0]][neighbour[1]] === null) {
                 unexistantNeighbours.push(neighbour);
             }
         }
@@ -73,10 +73,13 @@
         const unexistantNeighbours: Vec2[] = [];
         for (const x in map) {
             for (const y in map[x]) {
+                if (map[x][y]?.type == "empty" || map[x][y] == null) continue;
                 const neighbours = getUnexistantNeighbours([
                     Number(x),
                     Number(y),
                 ]);
+                console.log(neighbours);
+                
                 for (const neighbour of neighbours) {
                     unexistantNeighbours.push(neighbour);
                 }
@@ -86,8 +89,7 @@
     }
 
     function addEmptyTiles(position: Vec2[]) {
-        console.log(position);
-        for (const pos of position) {
+        for (const pos of position) {     
             addTile(pos, "empty");
         }
     }
@@ -97,7 +99,7 @@
         for (const x in map) {
             for (const y in map[x]) {
                 if (map[x][y]?.type == "empty") {
-                    map[x][y] = null;                    
+                    map[x][y] = null;
                 }
             }
         }
@@ -126,9 +128,7 @@
                             color={y.color}
                         />
                     {:else}
-                        <div class="none">
-
-                        </div>
+                        <div class="none" />
                     {/if}
                 {/each}
             {/if}
