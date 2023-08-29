@@ -9,9 +9,15 @@ export class Base implements Tile {
     description: string = "Base";
     color: string = "#666666";
     component = TileComponent;
+    mainActionTitle = "Do Action";
 
-    constructor(id: number, position: [number, number]) {
+    constructor (id: number, position: [number, number]) {
         this.id = id;
         this.position = position;
     }
+
+    mainActionFunction = (args: {}) => {
+        
+    }
+
 }

@@ -2,7 +2,7 @@
     import { onMount } from "svelte";
     export let name: string;
     export let color: string;
-
+    
     export let actionFunction: (args: {}) => void;
     export let actionTitle: string;
 
@@ -66,6 +66,7 @@
 </script>
 
 <div style={`${styleColor}`} class="baseTile">
-    <div class="tileName">{name}</div>
-
+    <button on:click={ actionFunction({}) }>
+        {actionTitle}
+    </button>
 </div>

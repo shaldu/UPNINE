@@ -1,18 +1,17 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import type { TileMap, TileType, Vec2 } from "$types";
-    import { Empty, Wheat, None } from "$lib/tiles";
+    import { Buyable, Empty, Wheat, None } from "$lib/tiles";
 
     const MAP_SIZE = 32;
 
     let map: TileMap = [];
     let tileBuyMode = false;
-
+    
+    
     onMount(() => {
         initMapWithNull();
         addTile([16, 16], "wheat");
-        addTile([2, 2], "wheat");
-        console.log(map);
     });
 
     function initMapWithNull() {
@@ -25,13 +24,16 @@
     }
 
     function addTile(position: Vec2, tileType: TileType) {
-        let tile = new Empty(1, position);
+        let tile = new None(1, position);
 
         switch (tileType) {
             case "wheat":
                 tile = new Wheat(1, position);
                 break;
-            case "empty":
+            case "buyable":
+                tile = new Buyable(1, position);
+                break;
+            case "empty": 
                 tile = new Empty(1, position);
                 break;
             default:
@@ -66,7 +68,7 @@
         const unexistantNeighbours: Vec2[] = [];
         for (const x in map) {
             for (const y in map[x]) {
-                if (map[x][y]?.type == "empty" || map[x][y] == null) continue;
+                if (map[x][y]?.type == "buyable" || map[x][y] == null) continue;
                 const neighbours = getUnexistantNeighbours([
                     Number(x),
                     Number(y),
@@ -83,15 +85,15 @@
 
     function addEmptyTiles(position: Vec2[]) {
         for (const pos of position) {     
-            addTile(pos, "empty");
+            addTile(pos, "buyable");
         }
     }
 
-    function removeEmptyTiles() {
-        //loop trough map and remove all empty tiles
+    function removeBuyableTiles() {
+        //loop trough map and remove all Buyable tiles
         for (const x in map) {
             for (const y in map[x]) {
-                if (map[x][y]?.type == "empty") {
+                if (map[x][y]?.type == "buyable") {
                     map[x][y] = null;
                 }
             }
@@ -103,7 +105,7 @@
         if (tileBuyMode) {
             addEmptyTiles(getAllUnexistantNeighbours());
         } else {
-            removeEmptyTiles();
+            removeBuyableTiles();
         }
     }
 </script>
@@ -118,7 +120,10 @@
                             this={y.component}
                             name={y.name}
                             color={y.color}
-                        />
+                            actionFunction={y.mainActionFunction({})}
+                            actionTitle={y.mainActionTitle}
+                            >
+                        </svelte:component>
                     {:else}
                         <div class="none" />
                     {/if}

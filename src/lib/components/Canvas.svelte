@@ -1,10 +1,13 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import Map from "./Map.svelte";
+    import Gold from "./Gold.svelte";
 
     let canvas: HTMLDivElement;
     let innerCanvas: HTMLDivElement;
     let middleMousePressed = false;
+
+    let gold = 10000000;
 
     let zoom = 1;
     let keyW = false,
@@ -17,7 +20,8 @@
     let mousePosition = [0, 0];
 
     onMount(() => {
-        window.addEventListener("contextmenu", e => e.preventDefault());
+        innerCanvas = innerCanvas.querySelector(".position-absolute") as HTMLDivElement;
+        window.addEventListener("contextmenu", (e) => e.preventDefault());
 
         canvas.addEventListener("mousemove", (e) => {
             mousePosition = [e.clientX, e.clientY];
@@ -73,9 +77,10 @@
             }, 10);
         }
 
+
+        zoomCanvas(.4);
         centerCanvas();
         movementInterval();
-        zoomCanvas(zoom);
     });
 
     const zoomCanvasEvent = (e: WheelEvent) => {
@@ -86,15 +91,27 @@
         if (e.deltaY < 0) {
             if (zoom < maxZoom) {
                 zoom += zoomSpeed;
-                zoomCanvas(zoom);
             }
         } else {
             if (zoom > minZoom) {
                 zoom -= zoomSpeed;
-                zoomCanvas(zoom);
             }
         }
+
+        const scale = zoom;
+
+        //TODO: fix zooming
+        zoomCanvas(scale);
     };
+
+    function zoomCanvas(scale: number) {
+        innerCanvas.style.transform = `scale(${scale})`;
+    }
+
+    function moveCanvas(valueX: number, valueY: number) {
+        innerCanvas.style.left = `${innerCanvas.offsetLeft + valueX}px`;
+        innerCanvas.style.top = `${innerCanvas.offsetTop + valueY}px`;
+    }
 
     function centerCanvas() {
         //move canvas to center
@@ -139,24 +156,17 @@
                 break;
         }
     };
-
-    function moveCanvas(valueX: number, valueY: number) {
-        innerCanvas.style.left = `${innerCanvas.offsetLeft + valueX}px`;
-        innerCanvas.style.top = `${innerCanvas.offsetTop + valueY}px`;
-    }
-
-    function zoomCanvas(value: number) {
-        // const maxZoom = 4;
-        // const minZoom = 0.2;
-        // const zoomSpeed = 0.1;
-        innerCanvas.style.transform = `scale(${value})`;
-
-    }
 </script>
 
 <!-- svelte-ignore a11y-autofocus -->
 <div id="ui">
-    <div id="ui-top-bar" />
+    <div id="ui-top-bar">
+        <div class="inner">
+            <div class="gold">
+                <Gold gold={gold} />
+            </div>
+        </div>
+    </div>
     <div id="ui-side-bar">
         <div class="inner">
             <button
