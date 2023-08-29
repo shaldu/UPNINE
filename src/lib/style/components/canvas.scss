@@ -2,6 +2,7 @@
     position: absolute;
     width: 100%;
     height: calc(100% - $header_ui_height);
+    left: $header_ui_side;
     top: $header_ui_height;
     background-color: #222;
     overflow: hidden;

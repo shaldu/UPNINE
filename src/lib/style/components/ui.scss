@@ -23,7 +23,7 @@
 
     #ui-side-bar {
         position: absolute;
-        width: 200px;
+        width: $header_ui_side;
         height: 100%;
         top: $header_ui_height;
         left: 0;
