@@ -1,13 +1,9 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import Map from "./Map.svelte";
-    import Gold from "./Gold.svelte";
 
     let canvas: HTMLDivElement;
     let innerCanvas: HTMLDivElement;
-    let middleMousePressed = false;
-
-    let gold = 10000000;
+    let rightClickPress = false;
 
     let zoom = 1;
     let keyW = false,
@@ -15,7 +11,7 @@
         keyS = false,
         keyD = false;
     let movementIntervalVar;
-    let mapComponent: Map;
+
 
     let mousePosition = [0, 0];
 
@@ -30,20 +26,20 @@
         canvas.addEventListener("mousedown", (e) => {
             if (e.button === 2) {
                 e.preventDefault();
-                middleMousePressed = true;
+                rightClickPress = true;
             }
         });
 
         canvas.addEventListener("mouseup", (e) => {
             if (e.button === 2) {
                 e.preventDefault();
-                middleMousePressed = false;
+                rightClickPress = false;
             }
         });
 
         //add on mouse move event listener
         canvas.addEventListener("mousemove", (e) => {
-            if (middleMousePressed) {
+            if (rightClickPress) {
                 moveCanvas(e.movementX, e.movementY);
             }
         });
@@ -163,17 +159,13 @@
     <div id="ui-top-bar">
         <div class="inner">
             <div class="gold">
-                <Gold gold={gold} />
+              
             </div>
         </div>
     </div>
     <div id="ui-side-bar">
         <div class="inner">
-            <button
-                class="buy-btn"
-                on:click={() => mapComponent.switchTileBuyMode()}
-                >Buy Tiles</button
-            >
+            
         </div>
     </div>
 </div>
@@ -188,6 +180,8 @@
     bind:this={canvas}
 >
     <div id="inner-canvas" bind:this={innerCanvas}>
-        <Map bind:this={mapComponent} />
+        <div class="position-absolute">
+            <h2>hello</h2>
+        </div>
     </div>
 </div>
