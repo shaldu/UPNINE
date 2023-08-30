@@ -9,6 +9,8 @@ export type Tile = {
     type: string;
     name: string;
     description: string;
+    canvas: HTMLDivElement;
+    matrixId: number;
 }
 
 export type TileMap = Tile[][] | null[][];

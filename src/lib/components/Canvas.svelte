@@ -1,5 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    import Game from "$game/game";
+    import { MAP_SIZE, TILE_SIZE } from "$game/config";
 
     let canvas: HTMLDivElement;
     let innerCanvas: HTMLDivElement;
@@ -12,11 +14,13 @@
         keyD = false;
     let movementIntervalVar;
 
-
+    let game: Game;
     let mousePosition = [0, 0];
 
     onMount(() => {
-        innerCanvas = innerCanvas.querySelector(".position-absolute") as HTMLDivElement;
+        innerCanvas = innerCanvas.querySelector(
+            ".position-absolute"
+        ) as HTMLDivElement;
         window.addEventListener("contextmenu", (e) => e.preventDefault());
 
         canvas.addEventListener("mousemove", (e) => {
@@ -73,8 +77,9 @@
             }, 10);
         }
 
+        game = new Game(innerCanvas);
 
-        zoomCanvas(.4);
+        zoomCanvas(0.4);
         centerCanvas();
         movementInterval();
     });
@@ -105,8 +110,10 @@
     }
 
     function moveCanvas(valueX: number, valueY: number) {
-        innerCanvas.style.left = `${innerCanvas.offsetLeft + valueX}px`;
-        innerCanvas.style.top = `${innerCanvas.offsetTop + valueY}px`;
+        if (innerCanvas) {
+            innerCanvas.style.left = `${innerCanvas.offsetLeft + valueX}px`;
+            innerCanvas.style.top = `${innerCanvas.offsetTop + valueY}px`;
+        }
     }
 
     function centerCanvas() {
@@ -158,15 +165,11 @@
 <div id="ui">
     <div id="ui-top-bar">
         <div class="inner">
-            <div class="gold">
-              
-            </div>
+            <div class="gold" />
         </div>
     </div>
     <div id="ui-side-bar">
-        <div class="inner">
-            
-        </div>
+        <div class="inner" />
     </div>
 </div>
 <div
@@ -180,8 +183,12 @@
     bind:this={canvas}
 >
     <div id="inner-canvas" bind:this={innerCanvas}>
-        <div class="position-absolute">
-            <h2>hello</h2>
-        </div>
+        <div
+            class="position-absolute"
+            style={`
+            grid-template-columns: repeat(${MAP_SIZE}, ${TILE_SIZE}px);
+            grid-template-rows: repeat(${MAP_SIZE}, ${TILE_SIZE}px);
+        `}
+        />
     </div>
 </div>

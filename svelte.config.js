@@ -15,6 +15,7 @@ const config = {
 		alias: {
 			$components: './src/lib/components',
 			$types: './src/lib/@types',
+			$game: './src/lib/game',
 		}
 	}
 };
