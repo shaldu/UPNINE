@@ -1,5 +1,7 @@
-import type { Tile, Vec2, TileType, TileMap} from "$types";
+import type { Tile, Vec2, TileType, TileMap } from "$types";
+import bigInt from "big-integer";
 import { MAP_SIZE } from "./config";
+import { BaseCurrency, WheatCurrency } from "./currency";
 import { Base, Wheat } from "./tiles";
 
 
@@ -9,10 +11,15 @@ export default class Game {
     mapSize: number = MAP_SIZE;
     canvas: HTMLDivElement;
 
+    coins: BaseCurrency = new BaseCurrency();
+    wheat: WheatCurrency = new WheatCurrency();
+
     constructor(canvas: HTMLDivElement) {
         this.canvas = canvas;
         this.initMap();
         this.loadMap();
+
+
     }
 
     initMap() {
@@ -25,14 +32,20 @@ export default class Game {
     }
 
     loadMap() {
-        //TODO: maybe read from file
+
         this.tileMap.forEach((row, i) => {
             row.forEach((tile, j) => {
-                new Base(this.canvas, i * this.mapSize + j, [i,j], i * this.mapSize + j);
+
                 if (i == (this.mapSize / 2) && j == (this.mapSize / 2)) {
-                    new Wheat(this.canvas, i * this.mapSize + j, [i,j], i * this.mapSize + j);
+                    const currency = new WheatCurrency();
+                    tile = new Wheat(this.canvas, i * this.mapSize + j, [i, j], i * this.mapSize + j, currency);
+                } else {
+                    const currency = new BaseCurrency();
+                    tile = new Base(this.canvas, i * this.mapSize + j, [i, j], i * this.mapSize + j, currency);
                 }
+
             });
         });
+
     }
 }

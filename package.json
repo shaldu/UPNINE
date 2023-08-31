@@ -22,6 +22,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"big-integer": "^1.6.51",
 		"bootstrap": "^5.3.1"
 	}
 }

@@ -1,4 +1,5 @@
-
+import TileComponent from '$components/Tile.svelte';
+import type { BaseCurrency } from "$game/currency";
 import { Vec2 } from "./global";
 
 export type TileType = "none" | "empty" | "wheat" | "base" | "buyable";
@@ -11,6 +12,8 @@ export type Tile = {
     description: string;
     canvas: HTMLDivElement;
     matrixId: number;
+    currency: BaseCurrency | null;
+    tile: TileComponent | null;
 }
 
 export type TileMap = Tile[][] | null[][];

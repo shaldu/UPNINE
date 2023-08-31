@@ -2,12 +2,15 @@
     import { type SvelteComponent, onMount } from "svelte";
     import type BaseComponent from "./TileComponents/Base.svelte";
     import type { TileType } from "$types";
+    import type { BaseCurrency } from "$game/currency";
 
     export let matrixId: number;
     export let name: string;
     export let color: string = "#666666";
     export let tileComponent: typeof BaseComponent;
     export let tileType: TileType
+
+    export let currency: BaseCurrency;
 
     let styleColor = ''
 
@@ -70,6 +73,6 @@
 
 <div style={`order: ${matrixId}; ${styleColor} `} class={`baseTile ${tileType}`}>
     <div class="tileName">{name}
-        <svelte:component this={tileComponent} />
+        <svelte:component this={tileComponent} currency={currency} />
     </div> 
 </div>

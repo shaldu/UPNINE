@@ -1,9 +1,10 @@
 import type { Tile, Vec2, TileType} from "$types";
 import WheatComponent from '$components/TileComponents/Wheat.svelte';
 import { Base } from './index';
+import { WheatCurrency } from "$game/currency";
 
 export default class Wheat extends Base {
-    
+
     get color(): string {
         return '#d1cf69';
     }
