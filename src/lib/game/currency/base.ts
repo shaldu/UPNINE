@@ -4,15 +4,19 @@ import { writable, type Writable } from "svelte/store";
 export default class BaseCurrency {
     
     value: bigInt.BigInteger = bigInt(0);
-
-    store: Writable<{formattedValue:string, formattedAndNamedValue: string}>;
+    level: number = 1;
+    store: Writable<{formattedValue:string, formattedAndNamedValue: string, formatNumber: (value: bigInt.BigInteger) => string, cost: bigInt.BigInteger, level: number}>;
 
     constructor() {
-        this.store = writable({formattedValue: this.formattedValue, formattedAndNamedValue: this.formattedAndNamedValue});
+        this.store = writable({formattedValue: this.formattedValue, formattedAndNamedValue: this.formattedAndNamedValue, formatNumber: this.formatNumber, cost: this.cost, level: this.level});
     }
 
     get name(): string {
         return 'BaseCurrency';
+    }
+
+    get cost(): bigInt.BigInteger {
+        return bigInt(10).multiply(this.level);
     }
 
     getValue(): bigInt.BigInteger {
@@ -25,6 +29,10 @@ export default class BaseCurrency {
 
     get formattedAndNamedValue(): string {
         return `${this.formattedValue} ${this.name}`;
+    }
+
+    formatNumber(value: bigInt.BigInteger | number): string {
+        return this.formatValue(value);
     }
 
     formatValue(value: bigInt.BigInteger | number): string {
@@ -42,7 +50,7 @@ export default class BaseCurrency {
     }
 
     updateStore(){
-        this.store.set({formattedValue: this.formattedValue, formattedAndNamedValue: this.formattedAndNamedValue});
+        this.store.set({formattedValue: this.formattedValue, formattedAndNamedValue: this.formattedAndNamedValue, formatNumber: this.formatNumber, cost: this.cost, level: this.level});
     }
 
     add(value: bigInt.BigInteger | number) {
@@ -69,6 +77,12 @@ export default class BaseCurrency {
         return this.value;
     }
 
-
+    buyUpgrade() {
+        if (this.value.greaterOrEquals(this.cost)) {
+            this.subtract(this.cost);
+            this.level++;
+            this.updateStore();
+        }
+    }
 
 }

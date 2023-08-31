@@ -40,3 +40,27 @@
         }
     }
 }
+
+button {
+    margin-top: 10px;
+    width: 100%;
+    height: auto;
+    padding: 0px 12px;
+    font-size: 14px;
+    background-color: transparent;
+    color: white;
+    border: solid 2px white;
+
+    .mainText, .subText {
+        padding: 8px 0px;        
+    }
+
+    .mainText{
+        font-size: 16px;
+        border-bottom: 1px solid white;
+    }
+
+    .subText{
+        font-size: 14px;
+    }
+}

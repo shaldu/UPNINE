@@ -19,7 +19,6 @@ export default class Game {
         this.initMap();
         this.loadMap();
 
-
     }
 
     initMap() {
@@ -31,8 +30,8 @@ export default class Game {
         }
     }
 
-    loadMap() {
-
+    loadMap() { 
+        //load map from file
         this.tileMap.forEach((row, i) => {
             row.forEach((tile, j) => {
 

@@ -1,6 +1,7 @@
 import TileComponent from '$components/Tile.svelte';
 import type { BaseCurrency } from "$game/currency";
 import { Vec2 } from "./global";
+import bigInt from "big-integer";
 
 export type TileType = "none" | "empty" | "wheat" | "base" | "buyable";
 
@@ -14,6 +15,7 @@ export type Tile = {
     matrixId: number;
     currency: BaseCurrency | null;
     tile: TileComponent | null;
+
 }
 
 export type TileMap = Tile[][] | null[][];

@@ -3,16 +3,18 @@
     import type BaseComponent from "./TileComponents/Base.svelte";
     import type { TileType } from "$types";
     import type { BaseCurrency } from "$game/currency";
+    import type { Base } from "$game/tiles";
+    import type bigInt from "big-integer";
 
     export let matrixId: number;
     export let name: string;
     export let color: string = "#666666";
     export let tileComponent: typeof BaseComponent;
-    export let tileType: TileType
-
+    export let tileType: TileType;
+    export let tile: Base;
     export let currency: BaseCurrency;
 
-    let styleColor = ''
+    let styleColor = "";
 
     onMount(() => {
         setColors();
@@ -71,8 +73,10 @@
     }
 </script>
 
-<div style={`order: ${matrixId}; ${styleColor} `} class={`baseTile ${tileType}`}>
-    <div class="tileName">{name}
-        <svelte:component this={tileComponent} currency={currency} />
-    </div> 
+<div
+    style={`order: ${matrixId}; ${styleColor} `}
+    class={`baseTile ${tileType}`}
+>
+    <!-- <div class="tileName">{name}</div> -->
+    <svelte:component this={tileComponent} {currency} tile={tile} name={name} />
 </div>
