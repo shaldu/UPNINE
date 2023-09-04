@@ -1,5 +1,6 @@
 import TileComponent from '$components/Tile.svelte';
 import type { BaseCurrency } from "$game/currency";
+import type { Writable } from 'svelte/store';
 import { Vec2 } from "./global";
 import bigInt from "big-integer";
 
@@ -15,7 +16,9 @@ export type Tile = {
     matrixId: number;
     currency: BaseCurrency | null;
     tile: TileComponent | null;
-
+    store: Writable<{  }>;
+    progressbar: { current: number, max: number };
+    update(rate:number): void;
 }
 
 export type TileMap = Tile[][] | null[][];

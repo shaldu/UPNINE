@@ -2,21 +2,22 @@ import bigInt from "big-integer";
 import { writable, type Writable } from "svelte/store";
 
 export default class BaseCurrency {
-    
+
     value: bigInt.BigInteger = bigInt(0);
     level: number = 1;
-    store: Writable<{formattedValue:string, formattedAndNamedValue: string, formatNumber: (value: bigInt.BigInteger) => string, cost: bigInt.BigInteger, level: number}>;
+    store: Writable<{formattedValue: string, formattedAndNamedValue: string, formatNumber: (value: bigInt.BigInteger) => string, cost: bigInt.BigInteger, level: number, getValue: bigInt.BigInteger }>;
 
     constructor() {
-        this.store = writable({formattedValue: this.formattedValue, formattedAndNamedValue: this.formattedAndNamedValue, formatNumber: this.formatNumber, cost: this.cost, level: this.level});
+        this.store = writable({formattedValue: this.formattedValue, formattedAndNamedValue: this.formattedAndNamedValue, formatNumber: this.formatNumber, cost: this.cost, level: this.level, getValue: this.value });        
     }
 
     get name(): string {
         return 'BaseCurrency';
     }
 
+
     get cost(): bigInt.BigInteger {
-        return bigInt(10).multiply(this.level);
+        return bigInt(10).multiply(this.level); 
     }
 
     getValue(): bigInt.BigInteger {
@@ -39,18 +40,18 @@ export default class BaseCurrency {
         const suffixes = ['', 'K', 'M', 'B', 'T', 'Q', 'QQ', 'S', 'SS'];
         let suffixIndex = 0;
         let formattedValue = value.toString();
-    
+
         while (formattedValue.length > 3) {
             formattedValue = formattedValue.slice(0, -3);
             suffixIndex++;
         }
-    
+
         const suffix = suffixes[suffixIndex];
         return `${formattedValue} ${suffix}`;
     }
 
-    updateStore(){
-        this.store.set({formattedValue: this.formattedValue, formattedAndNamedValue: this.formattedAndNamedValue, formatNumber: this.formatNumber, cost: this.cost, level: this.level});
+    updateStore() {
+        this.store.set({ formattedValue: this.formattedValue, formattedAndNamedValue: this.formattedAndNamedValue, formatNumber: this.formatNumber, cost: this.cost, level: this.level, getValue: this.value });
     }
 
     add(value: bigInt.BigInteger | number) {
@@ -77,12 +78,12 @@ export default class BaseCurrency {
         return this.value;
     }
 
-    buyUpgrade() {
-        if (this.value.greaterOrEquals(this.cost)) {
-            this.subtract(this.cost);
+    buyUpgrade(otherCurrency: BaseCurrency) {
+        if (otherCurrency.value.greaterOrEquals(this.cost)) {
+            otherCurrency.subtract(this.cost);
             this.level++;
-            this.updateStore();
         }
+        this.updateStore();
     }
 
 }

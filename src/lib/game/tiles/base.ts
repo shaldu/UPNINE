@@ -3,6 +3,9 @@ import TileComponent from '$components/Tile.svelte';
 import BuyableTileComponent from '$components/TileComponents/Buyable.svelte';
 import type { BaseCurrency } from "$game/currency";
 import bigInt from "big-integer";
+import type Game from "$game/game";
+import { writable, type Writable } from "svelte/store";
+
 
 export default class Base implements Tile {
     id: number;
@@ -11,16 +14,33 @@ export default class Base implements Tile {
     tile: TileComponent | null = null;
     matrixId: number;
     currency: BaseCurrency;
-  
+    game: Game;
 
-    constructor(canvas: HTMLDivElement, id: number, position: Vec2, matrixId: number, currency: BaseCurrency) {
+    store: Writable<{ progressBarObj:  { current: number, max: number } }>;
+
+    progressbar: { current: number, max: number } = {current: 0, max: 10};
+
+    constructor(game:Game,canvas: HTMLDivElement, id: number, position: Vec2, matrixId: number, currency: BaseCurrency) {
+        this.store = writable({ progressBarObj: this.progressbar });
+
+        this.game = game;
         this.canvas = canvas;
         this.id = id;
         this.position = position;
         this.matrixId = matrixId;
         this.currency = currency;
-        this,currency.add(10000);
+
+
+
         this.addComponent();
+    }
+
+    updateStore() {
+        this.store.set({ progressBarObj: this.progressbar });
+    }
+
+    get progressBarObj(): {  } {
+        return this.progressbar;
     }
 
     get name(): string {
@@ -43,8 +63,8 @@ export default class Base implements Tile {
         return BuyableTileComponent;
     }
 
-    buyUpgrade() {
-        this.currency.buyUpgrade();
+    buyUpgrade(currency: BaseCurrency) {
+        this.currency.buyUpgrade(currency);
     }
 
 
@@ -58,9 +78,24 @@ export default class Base implements Tile {
                 matrixId: this.matrixId,
                 currency: this.currency,
                 tile: this,
+                game: this.game,
                 tileComponent: this.component
             }
         });
+    }
+
+    updateProgressbar(rate:number) {
+        this.progressbar.current += (rate / 1000);
+        if (this.progressbar.current >= this.progressbar.max) {
+            this.progressbar.current = 0;
+        }
+
+        
+        this.updateStore();
+    }
+
+    update(rate:number) {
+        this.updateProgressbar(rate);
     }
 
 }

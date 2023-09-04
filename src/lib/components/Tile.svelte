@@ -5,6 +5,7 @@
     import type { BaseCurrency } from "$game/currency";
     import type { Base } from "$game/tiles";
     import type bigInt from "big-integer";
+    import type Game from "$game/game";
 
     export let matrixId: number;
     export let name: string;
@@ -13,6 +14,7 @@
     export let tileType: TileType;
     export let tile: Base;
     export let currency: BaseCurrency;
+    export let game: Game;
 
     let styleColor = "";
 
@@ -78,5 +80,5 @@
     class={`baseTile ${tileType}`}
 >
     <!-- <div class="tileName">{name}</div> -->
-    <svelte:component this={tileComponent} {currency} tile={tile} name={name} />
+    <svelte:component this={tileComponent} {currency} tile={tile} name={name} game={game}/>
 </div>

@@ -5,6 +5,8 @@
 
     let canvas: HTMLDivElement;
     let innerCanvas: HTMLDivElement;
+    let uiElement: HTMLDivElement;
+
     let rightClickPress = false;
 
     let zoom = 1;
@@ -77,7 +79,7 @@
             }, 10);
         }
 
-        game = new Game(innerCanvas);
+        game = new Game(innerCanvas, uiElement);
 
         zoomCanvas(0.4);
         centerCanvas();
@@ -162,15 +164,8 @@
 </script>
 
 <!-- svelte-ignore a11y-autofocus -->
-<div id="ui">
-    <div id="ui-top-bar">
-        <div class="inner">
-            <div class="gold" />
-        </div>
-    </div>
-    <div id="ui-side-bar">
-        <div class="inner" />
-    </div>
+<div id="ui" bind:this={uiElement}>
+
 </div>
 <div
     id="canvas"
