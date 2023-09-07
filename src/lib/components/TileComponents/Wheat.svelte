@@ -22,7 +22,7 @@
     onMount(() => {});
 </script>
 
-<div>
+<div class="tile-inner">
     <div class="d-flex justify-content-between">
         <div>
             {name}
@@ -31,27 +31,35 @@
             {$tileCurrency.formattedValue}
         </div>
     </div>
+    <div class="tile-content no-zoom">
+        <Button
+            text="Buy Fields"
+            subtextLeft={`Cost: ${gameCoinCurrency.formatNumberName(
+                $tileCurrency.cost
+            )}`}
+            action={() => {
+                tile.buyUpgrade(gameCoinCurrency);
+            }}
+        />
+        <Progressbar
+            currentProgress={$tileStore.progressBarObj.current}
+            maxProgress={$tileStore.progressBarObj.max}
+            produceValue={$tileStore.progressBarObj.earning}
+        />
 
-    <Button
-        text="Buy Worker"
-        subtextLeft={`Cost: ${currency.formatNumber($tileCurrency.cost)}`}
-        action={() => {
-            tile.buyUpgrade(gameCoinCurrency);
-        }}
-    />
-    <Progressbar currentProgress={$tileStore.progressBarObj.current} maxProgress={$tileStore.progressBarObj.max} />
+    </div>
 </div>
 <div class="bottomBar d-flex justify-content-between">
     <div>
         {$tileCurrency.level}
     </div>
-    <div>
+    <div style="min-width: 180px;">
         <Button
-        text={`Collect: ${currency.formattedAndNamedValue}`}
-        subtextLeft=""
-        action={() => {
-            tile.buyUpgrade(gameCoinCurrency);
-        }}
-    />
+            text="Collect"
+            
+            action={() => {
+                tile.buyUpgrade(gameCoinCurrency);
+            }}
+        />
     </div>
 </div>

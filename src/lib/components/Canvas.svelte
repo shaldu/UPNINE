@@ -87,6 +87,23 @@
     });
 
     const zoomCanvasEvent = (e: WheelEvent) => {
+
+        let noZoom = false;
+        let element = e.target as HTMLElement | null;
+        for (let i = 0; i < 8; i++) {
+            if (!element) {
+                break;
+            }
+            if (element.classList.contains("no-zoom")) {
+                noZoom = true;
+                break;
+            }
+            element = element.parentElement;
+        }
+        
+        if (noZoom) return;
+        
+
         const maxZoom = 4;
         const minZoom = 0.2;
         const zoomSpeed = 0.1;

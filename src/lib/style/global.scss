@@ -2,3 +2,28 @@
 @import './fonts';
 @import './home';
 @import './components';
+
+
+/* ===== Scrollbar CSS ===== */
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #8c8c8c transparent;
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 6px;
+
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #8c8c8c;
+    border-radius: 10px;
+    border: 3px none #ffffff;
+    
+  }

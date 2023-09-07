@@ -16,9 +16,9 @@ export default class Base implements Tile {
     currency: BaseCurrency;
     game: Game;
 
-    store: Writable<{ progressBarObj:  { current: number, max: number } }>;
+    store: Writable<{ progressBarObj:  { current: number, max: number, earning: string } }>;
 
-    progressbar: { current: number, max: number } = {current: 0, max: 10};
+    progressbar: { current: number, max: number, earning: string } = {current: 0, max: 10, earning: '0'};
 
     constructor(game:Game,canvas: HTMLDivElement, id: number, position: Vec2, matrixId: number, currency: BaseCurrency) {
         this.store = writable({ progressBarObj: this.progressbar });
@@ -29,13 +29,17 @@ export default class Base implements Tile {
         this.position = position;
         this.matrixId = matrixId;
         this.currency = currency;
-
-
-
+        this.initProgressbar();
         this.addComponent();
     }
 
+    initProgressbar() {
+        this.progressbar = {current: 0, max: 10, earning: this.currency.formatNumberName(this.currency.getIncome(this.getBasicIncome()))};
+    }
+
     updateStore() {
+        let earning = this.currency.formatNumberName(this.currency.getIncome(this.getBasicIncome()));
+        this.progressbar.earning = earning;
         this.store.set({ progressBarObj: this.progressbar });
     }
 
@@ -84,13 +88,16 @@ export default class Base implements Tile {
         });
     }
 
+    getBasicIncome(): bigInt.BigInteger {
+        return bigInt(10);
+    }
+
     updateProgressbar(rate:number) {
         this.progressbar.current += (rate / 1000);
         if (this.progressbar.current >= this.progressbar.max) {
             this.progressbar.current = 0;
+            this.currency.addIncome(this.getBasicIncome());
         }
-
-        
         this.updateStore();
     }
 

@@ -5,10 +5,10 @@ export default class BaseCurrency {
 
     value: bigInt.BigInteger = bigInt(0);
     level: number = 1;
-    store: Writable<{formattedValue: string, formattedAndNamedValue: string, formatNumber: (value: bigInt.BigInteger) => string, cost: bigInt.BigInteger, level: number, getValue: bigInt.BigInteger }>;
+    store: Writable<{formatNumberName: (value: bigInt.BigInteger | number) => string, formattedValue: string, formattedAndNamedValue: string, formatNumber: (value: bigInt.BigInteger) => string, cost: bigInt.BigInteger, level: number, getValue: bigInt.BigInteger }>;
 
     constructor() {
-        this.store = writable({formattedValue: this.formattedValue, formattedAndNamedValue: this.formattedAndNamedValue, formatNumber: this.formatNumber, cost: this.cost, level: this.level, getValue: this.value });        
+        this.store = writable({formattedValue: this.formattedValue, formattedAndNamedValue: this.formattedAndNamedValue, formatNumber: this.formatNumber, formatNumberName: this.formatNumberName ,cost: this.cost, level: this.level, getValue: this.value });        
     }
 
     get name(): string {
@@ -32,6 +32,10 @@ export default class BaseCurrency {
         return `${this.formattedValue} ${this.name}`;
     }
 
+    formatNumberName = (value: bigInt.BigInteger | number): string => {
+        return this.formatValue(value) + ' ' + this.name;
+    }
+
     formatNumber(value: bigInt.BigInteger | number): string {
         return this.formatValue(value);
     }
@@ -40,18 +44,27 @@ export default class BaseCurrency {
         const suffixes = ['', 'K', 'M', 'B', 'T', 'Q', 'QQ', 'S', 'SS'];
         let suffixIndex = 0;
         let formattedValue = value.toString();
-
-        while (formattedValue.length > 3) {
-            formattedValue = formattedValue.slice(0, -3);
-            suffixIndex++;
+        let formattedDecimalValue = '';
+    
+        // Check if the value is in the thousands or more
+        if (formattedValue.length > 3) {
+            while (formattedValue.length > 3) {
+                //the 
+                formattedDecimalValue = formattedValue.slice(-3);
+                formattedDecimalValue = formattedDecimalValue.slice(0, 2);
+                formattedValue = formattedValue.slice(0, -3);
+                suffixIndex++;
+            }
+            // Handle the remaining decimal part
+            formattedDecimalValue = `.${formattedDecimalValue}`;
         }
-
+    
         const suffix = suffixes[suffixIndex];
-        return `${formattedValue} ${suffix}`;
+        return `${formattedValue}${formattedDecimalValue} ${suffix}`;
     }
 
     updateStore() {
-        this.store.set({ formattedValue: this.formattedValue, formattedAndNamedValue: this.formattedAndNamedValue, formatNumber: this.formatNumber, cost: this.cost, level: this.level, getValue: this.value });
+        this.store.set({ formatNumberName: this.formatNumberName, formattedValue: this.formattedValue, formattedAndNamedValue: this.formattedAndNamedValue, formatNumber: this.formatNumber, cost: this.cost, level: this.level, getValue: this.value });
     }
 
     add(value: bigInt.BigInteger | number) {
@@ -77,6 +90,16 @@ export default class BaseCurrency {
         this.updateStore();
         return this.value;
     }
+
+    getIncome(baseValue: bigInt.BigInteger): bigInt.BigInteger {
+        return bigInt(baseValue).multiply(this.level);
+    }
+
+    addIncome(baseValue: bigInt.BigInteger) {
+        this.value = this.getIncome(baseValue).add(this.value);
+        this.updateStore();
+    }
+
 
     buyUpgrade(otherCurrency: BaseCurrency) {
         if (otherCurrency.value.greaterOrEquals(this.cost)) {

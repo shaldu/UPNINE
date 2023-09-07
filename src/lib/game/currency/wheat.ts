@@ -7,7 +7,7 @@ export default class WheatCurrency extends BaseCurrency {
     }
 
     get initialCost(): bigInt.BigInteger {
-        return bigInt(10);
+        return bigInt(2);
     }
     
 }

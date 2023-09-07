@@ -27,7 +27,7 @@ export default class Game {
         this.loadMap();
         this.loadUI();
         this.gameLoopInit();
-        this.globalCoin.add(1000);
+        this.globalCoin.add(10002000);
     }
 
     loadUI() {
@@ -58,8 +58,8 @@ export default class Game {
                     const currency = new WheatCurrency();
                     this.tileMap[i][j] = new Wheat(this, this.canvas, i * this.mapSize + j, [i, j], i * this.mapSize + j, currency);
                 } else if (i == (this.mapSize / 2) && j == (this.mapSize / 2) - 1) {
-                    const currency = new WheatCurrency();
-                    this.tileMap[i][j] = new Wheat(this, this.canvas, i * this.mapSize + j, [i, j], i * this.mapSize + j, currency);
+                    // const currency = new WheatCurrency();
+                    // this.tileMap[i][j] = new Wheat(this, this.canvas, i * this.mapSize + j, [i, j], i * this.mapSize + j, currency);
                 } else {
                     const currency = new BaseCurrency();
                     this.tileMap[i][j] = new Base(this, this.canvas, i * this.mapSize + j, [i, j], i * this.mapSize + j, currency);
